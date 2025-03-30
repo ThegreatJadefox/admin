@@ -44,7 +44,7 @@ st.markdown("This app receives reviews from the main app via an API endpoint run
 
 # Provide a refresh button to re-read the JSON file
 if st.button("Refresh Reviews"):
-    st.experimental_rerun()
+    st.rerun()
 
 # Read and display reviews from the JSON file
 if os.path.exists(DATA_FILE):
