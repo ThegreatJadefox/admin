@@ -2,10 +2,7 @@ import streamlit as st
 import requests
 import json
 
-# GitHub Configuration
-GITHUB_USER = "ThegreatJadefox"
-GITHUB_REPO = "review"
-GITHUB_FILE = "reviews.json"
+
 
 # Function to fetch reviews from GitHub
 def get_reviews():
@@ -17,7 +14,7 @@ def get_reviews():
 
 # Streamlit UI
 st.title("Customer Reviews Viewer")
-st.markdown("Reviews are stored in a GitHub JSON file.")
+
 
 if st.button("Refresh Reviews"):
     st.rerun()
