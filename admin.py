@@ -4,12 +4,12 @@ import json
 
 # GitHub Configuration
 GITHUB_USER = "ThegreatJadefox"
-GITHUB_REPO = "review-storage"
+GITHUB_REPO = "review"
 GITHUB_FILE = "reviews.json"
 
 # Function to fetch reviews from GitHub
 def get_reviews():
-    url = f"https://raw.githubusercontent.com/{GITHUB_USER}/{GITHUB_REPO}/main/{GITHUB_FILE}"
+    url = "https://github.com/ThegreatJadefox/email-scraper/blob/main/support/reviews.json}"
     response = requests.get(url)
     if response.status_code == 200:
         return response.json()
