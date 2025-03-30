@@ -5,6 +5,7 @@ import os
 from flask import Flask, request, jsonify
 
 # --- Setup for the API server inside the viewer app ---
+# This app is deployed at https://scraperreviews.streamlit.app
 app = Flask(__name__)
 DATA_FILE = "customer_review.json"
 
@@ -12,7 +13,7 @@ DATA_FILE = "customer_review.json"
 def receive_review():
     """Receive a new review from the main app and save it."""
     review = request.get_json()
-    # Load existing reviews or initialize empty list
+    # Load existing reviews or initialize an empty list
     if os.path.exists(DATA_FILE):
         try:
             with open(DATA_FILE, "r") as f:
@@ -29,7 +30,7 @@ def receive_review():
     return jsonify({"status": "success"}), 200
 
 def run_api():
-    # Run Flask API on a specified port (e.g., 5001)
+    # Run the Flask API on a specified port (e.g., 5001)
     app.run(port=5001)
 
 # Start the API server in a background thread
@@ -39,23 +40,29 @@ api_thread.start()
 
 # --- Streamlit code to display the reviews ---
 st.title("Customer Reviews Viewer")
+st.markdown("This app receives reviews via an API endpoint and displays them here.")
 
-st.markdown("This app receives reviews from the main app via an API endpoint running in the background.")
+# Initialize a session state counter to force data reloads
+if 'refresh_counter' not in st.session_state:
+    st.session_state.refresh_counter = 0
 
-# Provide a refresh button to re-read the JSON file
 if st.button("Refresh Reviews"):
-    st.rerun()
+    st.session_state.refresh_counter += 1
 
-# Read and display reviews from the JSON file
-if os.path.exists(DATA_FILE):
-    try:
-        with open(DATA_FILE, "r") as f:
-            reviews = json.load(f)
-    except Exception as e:
-        st.error(f"Error reading reviews: {e}")
-        reviews = []
-else:
-    reviews = []
+# Use a caching function that depends on the refresh counter.
+@st.cache_data(ttl=10)
+def load_reviews(refresh):
+    if os.path.exists(DATA_FILE):
+        try:
+            with open(DATA_FILE, "r") as f:
+                return json.load(f)
+        except Exception as e:
+            st.error(f"Error reading reviews: {e}")
+            return []
+    else:
+        return []
+
+reviews = load_reviews(st.session_state.refresh_counter)
 
 if reviews:
     for review in reviews:
