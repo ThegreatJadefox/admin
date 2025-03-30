@@ -20,7 +20,7 @@ st.title("Customer Reviews Viewer")
 st.markdown("Reviews are stored in a GitHub JSON file.")
 
 if st.button("Refresh Reviews"):
-    st.experimental_rerun()
+    st.rerun()
 
 reviews = get_reviews()
 
