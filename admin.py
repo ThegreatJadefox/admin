@@ -31,7 +31,7 @@ def receive_review():
 
 def run_api():
     # Run the Flask API on a specified port (e.g., 5001)
-    app.run(port=8502, debug=True, use_reloader=False)
+    app.run(port=0)
 
 # Start the API server in a background thread
 api_thread = threading.Thread(target=run_api)
